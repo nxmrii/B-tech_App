@@ -2,17 +2,20 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:rooms_btechapp/screens/LoginPage.dart';
 import 'package:rooms_btechapp/thems/mytheme.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 
 void main() async{
+
+  //ensures that Flutter binding is initialized before using any plugins.
   WidgetsFlutterBinding.ensureInitialized();
+  //initializes the Firebase app with specific options
   await Firebase.initializeApp(
       options: const FirebaseOptions(
           apiKey: 'AIzaSyAJCQpMU8CVk2Q91N-xZ9gJ13P9_FEVQJ0',
           appId: '1:646444349414:android:e76b442891d221fe538827',
           messagingSenderId: '646444349414',
-          projectId: 'roomsoflight-ec608'));
+          projectId: 'roomsoflight-ec608',
+          storageBucket: "roomsoflight-ec608.appspot.com", ));
   runApp(const MyApp());
 }
 
@@ -114,15 +117,6 @@ class HomePage extends StatelessWidget {
 
                       SizedBox(height: 10), // Adding some space
 
-                      // Continue as an admin text
-                      Text(
-                        'Continue as an Admin',
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.secondary,
-                          fontSize: 19,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
                     ],),
                   ),
                 ),

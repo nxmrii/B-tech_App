@@ -1,7 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:rooms_btechapp/screens/LoginPage.dart';
 import 'RegisterPage.dart';
 
+//stateful >> overall structure for the page.
 class forgotPassPage extends StatefulWidget {
   const forgotPassPage({Key? key}) : super(key: key);
 
@@ -11,7 +14,7 @@ class forgotPassPage extends StatefulWidget {
 
 class _ForgotPassPageState extends State<forgotPassPage> {
   final TextEditingController _emailController = TextEditingController();
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+
 
   @override
   void dispose() {
@@ -19,24 +22,53 @@ class _ForgotPassPageState extends State<forgotPassPage> {
     super.dispose();
   }
 
-  Future<void> _resetPassword() async {
+  //This method sends a password reset email using FirebaseAuth.
+  Future<void> forgetpassword() async {
     try {
-      await _auth.sendPasswordResetEmail(email: _emailController.text.trim());
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Password reset email sent!'),
-          backgroundColor: Colors.green,
-        ),
-      );
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error: ${e.toString()}'),
-          backgroundColor: Colors.red,
-        ),
+      // Check if the user exists in Firestore
+      var userSnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .where('email', isEqualTo: _emailController.text.trim())
+          .get();
+      if (userSnapshot.docs.isNotEmpty) {
+        // User exists, send password reset email
+        await FirebaseAuth.instance
+            .sendPasswordResetEmail(email: _emailController.text.trim());
+        showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                backgroundColor: Colors.green,
+                content: Text('Password reset link sent! Check your email.'),
+              );
+            }
+        );
+      } else {
+        // User not found
+        showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                backgroundColor: Colors.red,
+                content: Text('No user found for that email!'),
+              );
+            }
+        );
+      }
+    } on FirebaseAuthException catch (e) {
+      print(e);
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              content: Text(e.message.toString()),
+            );
+          }
       );
     }
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -82,7 +114,7 @@ class _ForgotPassPageState extends State<forgotPassPage> {
                       children: [
                         const SizedBox(height: 80),
                         Text(
-                          'Enter your Email or Phone Number and we will send you a link to change your password',
+                          'Enter your Email and we will send you a link to change your password',
                           style: TextStyle(
                             color: Theme.of(context).colorScheme.primary,
                             fontSize: 16,
@@ -127,12 +159,12 @@ class _ForgotPassPageState extends State<forgotPassPage> {
 
                         // Next Button
                         ElevatedButton(
-                          onPressed: _resetPassword,
+                          onPressed: forgetpassword,
                           child: const Center(
                             child: Padding(
                               padding: EdgeInsets.symmetric(vertical: 16),
                               child: Text(
-                                'Next',
+                                'sent',
                                 style: TextStyle(
                                   fontSize: 24,
                                   color: Colors.white,
@@ -154,7 +186,7 @@ class _ForgotPassPageState extends State<forgotPassPage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             const Text(
-                              "Create New Account?",
+                              "Back to login",
                               style: TextStyle(
                                 color: Color(0x6b4270b5),
                                 fontSize: 16,
@@ -167,13 +199,13 @@ class _ForgotPassPageState extends State<forgotPassPage> {
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) {
-                                      return  RegisterPage();
+                                      return  LoginPage();
                                     },
                                   ),
                                 );
                               },
                               child: const Text(
-                                "  Register",
+                                "  Login",
                                 style: TextStyle(
                                   color: Color(0xff4270B5),
                                   fontSize: 16,

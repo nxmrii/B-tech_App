@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:rooms_btechapp/screens/HajjAndUmrahPage.dart';
+import 'package:rooms_btechapp/screens/LecturesPage.dart';
+import 'package:rooms_btechapp/screens/MuftisPage.dart';
+import 'package:rooms_btechapp/screens/profilePage.dart';
+import 'package:rooms_btechapp/screens/voluntaryPage.dart';
 
 
 class HomePage extends StatefulWidget {
@@ -20,7 +25,7 @@ class _HomePageState extends State<HomePage> {
             padding: const EdgeInsets.symmetric(vertical: 30),
             child: Image.asset(
               "assets/home.jpg",
-              height: double.infinity,
+              height: 606,
               width: double.infinity,
               fit: BoxFit.cover,
             ),
@@ -35,8 +40,8 @@ class _HomePageState extends State<HomePage> {
                   Stack(
                     children: [
                       Container(
-                        height: 250,
-                        width: 330,
+                        height: 260,
+                        width: 360,
                         decoration: BoxDecoration(
 
                         ),
@@ -47,22 +52,28 @@ class _HomePageState extends State<HomePage> {
                         child: IconButton(
                           icon: Icon(Icons.arrow_back, color: Colors.white),
                           onPressed: () {
-                            Navigator.pop(context);
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ProfilePage(),
+                              ),
+                            );
                           },
                         ),
                       ),
                     ],
                   ),
 
-                  SizedBox(height: 220),
+                  SizedBox(height: 200),
+
 
                   // Categories Section
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
+                    padding: const EdgeInsets.symmetric(vertical: 140.0, horizontal: 10.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
+                        const Text(
                           'Categories',
                           style: TextStyle(
                             color: Colors.white,
@@ -70,40 +81,54 @@ class _HomePageState extends State<HomePage> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        SizedBox(height: 10),
+                        const SizedBox(height: 15),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             _buildCategoryItem(
                               context,
-                              icon: Icons.volunteer_activism,
+                              imagePath: 'assets/volunteer.png',
                               label: 'Voluntary\ninitiatives',
                               onTap: () {
-                                // Handle navigation to Voluntary initiatives
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => VoluntaryInitiativesPage(),
+                                  ),
+                                );
                               },
                             ),
                             _buildCategoryItem(
                               context,
-                              icon: Icons.person,
+                              imagePath: 'assets/mufties.png',
                               label: 'Muftis',
                               onTap: () {
-                                // Handle navigation to Muftis
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => const MuftisPage()),
+                                );
                               },
                             ),
                             _buildCategoryItem(
                               context,
-                              icon: Icons.hail,
+                              imagePath: 'assets/hajj.png',
                               label: 'Hajj and Umrah\ncampaigns',
                               onTap: () {
-                                // Handle navigation to Hajj and Umrah campaigns
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => const HajjAndUmrahPage()),
+                                );
                               },
                             ),
                             _buildCategoryItem(
                               context,
-                              icon: Icons.book,
+                              imagePath: 'assets/lectures.png', // Replace with your image path
                               label: 'Lectures',
                               onTap: () {
-                                // Handle navigation to Lectures
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => const LecturesPage()),
+                                );
                               },
                             ),
                           ],
@@ -120,21 +145,28 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildCategoryItem(BuildContext context, {required IconData icon, required String label, required VoidCallback onTap}) {
+  Widget _buildCategoryItem(BuildContext context, {required String imagePath, required String label, required VoidCallback onTap}) {
     return InkWell(
       onTap: onTap,
       child: Column(
         children: [
           CircleAvatar(
-            radius: 30,
-            backgroundColor: Colors.white,
-            child: Icon(icon, size: 30, color: Theme.of(context).primaryColor),
+            radius: 37,
+            backgroundColor: Color(0xffFDE9D2),
+            child: ClipOval(
+              child: Image.asset(
+                imagePath,
+                fit: BoxFit.cover,
+                width: 70,
+                height: 70,
+              ),
+            ),
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 8),
           Text(
             label,
             textAlign: TextAlign.center,
-            style: TextStyle(
+            style: const TextStyle(
               color: Colors.white,
               fontSize: 16,
               fontWeight: FontWeight.bold,
@@ -145,4 +177,3 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-
